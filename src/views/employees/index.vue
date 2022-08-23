@@ -1,6 +1,6 @@
 <template>
-  <div className="dashboard-container">
-    <div className="app-container">
+  <div class="dashboard-container">
+    <div class="app-container">
       <h2>
         员工
       </h2>
