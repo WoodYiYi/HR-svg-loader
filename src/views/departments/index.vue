@@ -1,47 +1,61 @@
 <template>
-  <el-card class="tree-card">
-    <!-- 用了一个行列布局 -->
-    <el-row align="middle" justify="space-between" style="height: 40px" type="flex">
-      <el-col>
-        <span>江苏传智播客教育科技股份有限公司</span>
-      </el-col>
-      <el-col :span="4">
-        <el-row justify="end" type="flex">
-          <!-- 两个内容 -->
-          <el-col>负责人</el-col>
-          <el-col>
-            <!-- 下拉菜单 element -->
-            <el-dropdown>
-              <span>
-                操作<i class="el-icon-arrow-down" />
-              </span>
-              <!-- 下拉菜单 -->
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>添加子部门</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-tree :data="departs" :default-expand-all="true" :props="defaultProps">
-      <tree-tools slot-scope="{ data }" :tree-node="data" />
-    </el-tree>
-  </el-card>
+  <div class="dashboard-container">
+    <div class="app-container">
+      <!-- 实现页面的基本布局 -->
+      <el-card class="tree-card">
+        <!-- 用了一个行列布局 -->
+        <!-- 缺少treeNode -->
+        <tree-tools :is-root="true" :tree-node="company" />
+        <!--default-expand-all 默认所有节点展开-->
+        <el-tree :data="departs" :props="defaultProps" default-expand-all>
+          <!-- :data="departs" 指展示的数据 :props="defaultProps" 指定节点标签为节点对象的某个属性值-->
+          <tree-tools slot-scope="{data}" :tree-node="data" @addDepts="addDepts" @delDepts="getDepartments" />
+        </el-tree>
+      </el-card>
+      <!-- 放置新增弹层组件  -->
+      <add-dept :show-dialog="showDialog" />
+    </div>
+  </div>
 </template>
 
 <script>
-import threeTools from './components/tree-tools'
+import TreeTools from './components/tree-tools'
+import AddDept from './components/add-dept' // 引入新增部门组件
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils/index'
 
 export default {
+  components: {
+    TreeTools,
+    AddDept
+  },
   data() {
     return {
-      departs: [{ name: '总裁办', manager: '曹操', children: [{ name: '董事会', manager: '曹丕' }] },
-        { name: '行政部', manager: '刘备' },
-        { name: '人事部', manager: '孙权' }],
+      company: {},
+      departs: [],
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
-      }
+      },
+      showDialog: false
+    }
+  },
+  created() {
+    this.getDepartments() // 调用自身方法
+  },
+  methods: {
+    // 获取组织架构
+    async getDepartments() {
+      const result = await getDepartments()
+      this.company = { name: result.companyName, manager: '负责人' }
+      this.departs = tranListToTreeData(result.depts, '') // 需要将其转化成树形结构
+    },
+
+    // 添加部门
+    addDepts(node) {
+      console.log(1234)
+      this.showDialog = true // 显示弹层
+      // 因为node是当前的点击的部门， 此时这个部门应该记录下来,
+      this.node = node
     }
   }
 }
