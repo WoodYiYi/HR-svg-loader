@@ -32,6 +32,7 @@ import { isExternal } from '@/utils/validate'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SidebarItem',
@@ -98,6 +99,11 @@ export default {
       }
       return path.resolve(this.basePath, routePath)
     }
+  },
+  computed: {
+    ...mapGetters([
+      'sidebar', 'routes'
+    ])
   }
 }
 </script>

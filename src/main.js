@@ -12,6 +12,7 @@ import * as filters from '@/filters' // 引入工具类
 import '@/icons' // icon
 import '@/permission' // permission control
 import * as directives from '@/directives' // 全局指令
+import Print from 'vue-print-nb' // 打印插件
 // 针对上面的引入语法  **`import *  as  变量`**
 // 得到的是一个对象**`{ 变量1：对象1，变量2： 对象2 ...   }`**,
 // 所以可以采用对象遍历的方法进行处理
@@ -31,6 +32,7 @@ Object.keys(directives).forEach(key => {
 import Component from '@/components'
 
 Vue.use(Component) // 注册自己的插件
+Vue.use(Print)
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
