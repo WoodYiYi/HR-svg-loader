@@ -99,11 +99,6 @@ export default {
       }
       return path.resolve(this.basePath, routePath)
     }
-  },
-  computed: {
-    ...mapGetters([
-      'sidebar', 'routes'
-    ])
   }
 }
 </script>
